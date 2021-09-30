@@ -1,12 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo-list</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Todo-list</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="container" id="container">
+            <header>
+                <div class="header-global-container">Todo</div>
+            </header>
+            <main>
+                <div class="content" id="content">
+                    <nav class="side-nav">
+                        <div class="nav-wrapper">
+                            <ul class="projects default-projects" id="default-projects">
+                                <li class="list-item" id="project-inbox">Inbox</li>
+                                <li class="list-item" id="project-today">Today</li>
+                                <li class="list-item" id="project-week">Upcoming</li>
+                            </ul>
+                            <ul class="projects custom-projects" id="custom-projects">
+                                <li class="list-item"><h4>Projects</h4></li>
+                            </ul>
+                            <ul class="projects add-form">
+                                <li class="list-item"><button id="add-btn">Add Project</button></li>
+                                <li class="list-item "><input type="text" id="project-name" name="project-name" placeholder="Project Name"></li>
+                            </ul>
+                        </div>
+                    </nav>
+                    <section class="todo-lists">
+                        <div class="todo-list-container">
+                            <div class="todo-list-header">
+                                <h2>Inbox</h2>
+                                <button id="add-task">Add Task</button>
+                            </div>
+                            <hr>
+                            <div class="todo-list-body">
+                                <ul class="task-list">
+                                    <!-- <li class="task-item">
+                                        <input class="task-button" type="checkbox">
+                                        </input>
+                                        <p class="task-title">This is the task title</p>
+                                    </li> -->
+                                </ul>
+                             <div class="add-task">
+                                <input type="text" id="task-name">
+                                <button id="add-task">Add</button>
+                            </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
     <script src="main.js"></script>
-</body>
+    </body>
 </html>
