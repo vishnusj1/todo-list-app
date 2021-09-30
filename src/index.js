@@ -1,10 +1,43 @@
 import todo from "./todo";
-import projects from "./projects";
+import Projects from "./projects";
+import controller from "./controller";
 
-const task = todo("water plants", "water the plants", "12-12-2000", "1");
+const todoList = (() => {
+    let projects = [];
 
-const project = projects("default");
-const inbox = projects("inbox");
+    projects.push(Projects("Default"));
 
-project.addTask(task);
-console.log(project.getTasks());
+    const _defaultProject = getProject("Default");
+
+    function getDefault() {
+        return _defaultProject;
+    }
+
+    function getProjects() {
+        return projects;
+    }
+
+    function getProject(name) {
+        return projects.find((project) => project.getName() === name);
+    }
+
+    function addProject(project) {
+        projects.push(project);
+    }
+
+    function addTask(projectName, task) {
+        const project = getProject(projectName);
+        project.addTask(task);
+        // console.log(getProject(projectName).getTasks());
+    }
+
+    return {
+        getDefault,
+        getProjects,
+        getProject,
+        addProject,
+        addTask,
+    };
+})();
+
+export default todoList;

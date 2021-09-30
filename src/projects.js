@@ -1,22 +1,28 @@
-// Moudle for projects
+const Projects = (name) => {
+    const _name = name;
+    const _tasks = [];
 
-const projects = (name) => {
-    let tasks = [];
+    const getName = () => _name;
 
-    const getName = () => name;
-    const setName = (name) => (this.name = name);
+    const setName = (name) => (_name = name);
 
-    const getTasks = () => tasks;
+    const getTasks = () => _tasks;
+
+    const getTask = (name) => {
+        return _tasks.find((task) => task.getTitle() === name);
+    };
+
     const addTask = (task) => {
-        tasks.push(task);
+        _tasks.push(task);
     };
 
     return {
         getName,
         setName,
         getTasks,
+        getTask,
         addTask,
     };
 };
 
-export default projects;
+export default Projects;
