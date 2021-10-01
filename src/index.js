@@ -1,8 +1,7 @@
-import todo from "./todo";
 import Projects from "./projects";
-import controller from "./controller";
+import Controller from "./controller";
 
-const todoList = (() => {
+const TodoList = (() => {
     let projects = [];
 
     projects.push(Projects("Default"));
@@ -25,10 +24,8 @@ const todoList = (() => {
         projects.push(project);
     }
 
-    function addTask(projectName, task) {
-        const project = getProject(projectName);
+    function addTask(project, task) {
         project.addTask(task);
-        // console.log(getProject(projectName).getTasks());
     }
 
     return {
@@ -40,4 +37,4 @@ const todoList = (() => {
     };
 })();
 
-export default todoList;
+export default TodoList;

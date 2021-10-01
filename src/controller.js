@@ -1,52 +1,54 @@
 import Projects from "./projects";
 import todo from "./todo";
-import todoList from "./index";
+import TodoList from "./index";
 
-const controller = (() => {
+const Controller = (() => {
     document.addEventListener("DOMContentLoaded", (e) => {
         const projectAddBtn = document.querySelector("#add-btn");
         projectAddBtn.addEventListener("click", addProject);
 
-        const taskAddBtn = document.querySelector("#add-task");
-        taskAddBtn.addEventListener("click", openTaskInput);
+        const taskInput = document.querySelector("#task-input");
+        taskInput.addEventListener("click", toggleTaskInput);
+
+        const addTaskBtn = document.querySelector("#add-task");
+        addTaskBtn.addEventListener("click", addTask);
 
         loadDefault();
         initProjectButtons();
     });
 
     function loadDefault() {
-        const project = todoList.getDefault();
-        populateProjectList(project.getName());
+        const project = TodoList.getDefault();
+        populateProjectList(project);
         loadProject(project);
     }
 
     function loadProject(project) {
-        const projectTitle = document.querySelector(".todo-list-header > h2");
-        projectTitle.textContent = project.getName();
+        const title = document.querySelector(".todo-list-header > h2");
+        title.textContent = project.getName();
+        loadTasks(project);
+    }
+
+    function loadTasks(project) {
+        clearList();
+        const tasks = project.getTasks();
+        tasks.forEach((task) => {
+            populateTaskList(task);
+        });
     }
 
     function initProjectButtons() {
-        // const inbox = document.querySelector("#project-inbox");
-        // const today = document.querySelector("#project-today");
-        // const week = document.querySelector("#project-week");
-        const defaultProject = document.getElementById("project-default");
         const userProjects = document.querySelector(".custom-projects");
         userProjects.addEventListener("click", (e) => {
             if (e.target.classList.contains("user-project")) {
                 openProject(e);
             }
         });
-        // inbox.addEventListener("click", openProject);
-        // today.addEventListener("click", openProject);
-        // week.addEventListener("click", openProject);
-        defaultProject.addEventListener("click", openProject);
     }
-
-    // function handleProjectSwitch()
 
     function openProject(e) {
         const projectName = e.target.textContent;
-        const project = todoList.getProject(projectName);
+        const project = TodoList.getProject(projectName);
         loadProject(project);
     }
 
@@ -55,7 +57,7 @@ const controller = (() => {
         const projectName = input.value;
         const project = Projects(projectName);
 
-        if (todoList.getProject(projectName)) {
+        if (TodoList.getProject(projectName)) {
             alert(`${projectName} already exists.`);
             return (input.value = "");
         }
@@ -64,45 +66,50 @@ const controller = (() => {
             return alert("Enter a name for project");
         }
 
-        console.log(todoList.getProjects());
-        todoList.addProject(project);
-        populateProjectList(projectName);
+        TodoList.addProject(project);
+        populateProjectList(project);
         input.value = "";
     }
 
-    function populateProjectList(name) {
+    function populateProjectList(project) {
         const list = document.querySelector(".custom-projects");
         const listItem = document.createElement("li");
-        listItem.setAttribute("id", `project-${name.toLowerCase()}`);
+        const projectName = project.getName();
+        listItem.setAttribute("id", `project-${projectName.toLowerCase()}`);
         listItem.classList.add("list-item", "user-project");
-        listItem.textContent = name;
+        listItem.textContent = projectName;
         list.appendChild(listItem);
     }
 
-    function openTaskInput() {
-        const addTask = document.querySelector(".add-task");
-        addTask.classList.add("active");
-        const taskInput = addTask.querySelector("#task-name");
-        const taskName = taskInput.value;
-
-        const addTaskBtn = addTask.querySelector("#add-task");
-        addTaskBtn.addEventListener("click", () => {
-            addTasks(taskName);
-        });
+    function toggleTaskInput() {
+        const inputDiv = document.querySelector(".add-task");
+        if (inputDiv.classList.contains("active")) {
+            inputDiv.classList.remove("active");
+        } else {
+            inputDiv.classList.add("active");
+        }
     }
 
-    function addTasks(taskName) {
+    function addTask() {
+        const input = document.querySelector("#task-name");
+        const taskName = input.value;
         const task = todo(taskName);
-        const project = document.querySelector(
+        const projectName = document.querySelector(
             ".todo-list-header > h2"
         ).textContent;
-        const taask = task.getTitle();
-        todoList.addTask(project, task);
-        populateTaskList(task);
-        console.log(todoList.getProject(project).getTask(taask));
+        const project = TodoList.getProject(projectName);
+
+        if (!taskName) {
+            return;
+        }
+        toggleTaskInput();
+        input.value = "";
+        TodoList.addTask(project, task);
+        loadTasks(project);
     }
+
     function populateTaskList(task) {
-        const taskList = document.querySelector(".task-list");
+        const list = document.querySelector(".task-list");
         const item = document.createElement("li");
         item.classList.add("task-item");
         const html = `
@@ -110,12 +117,13 @@ const controller = (() => {
                     <p class="task-title">${task.getTitle()}</p>
         `;
         item.innerHTML = html;
-        taskList.appendChild(item);
+        list.appendChild(item);
     }
-    return {
-        loadDefault,
-        addProject,
-    };
+
+    function clearList() {
+        const list = document.querySelector(".task-list");
+        list.innerHTML = "";
+    }
 })();
 
-export default controller;
+export default Controller;

@@ -24,5 +24,4 @@ const Projects = (name) => {
         addTask,
     };
 };
-
 export default Projects;
