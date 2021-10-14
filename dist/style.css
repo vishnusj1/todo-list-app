@@ -127,7 +127,7 @@ main {
 
 nav {
     height: 100%;
-    width: 250px;
+    width: 320px;
     min-width: 200px;
     background-color: var(--color-primary);
 }
@@ -152,6 +152,16 @@ nav {
 .nav-wrapper {
     padding: 2rem 0.5rem 2rem 2rem;
 }
+.list-heading {
+    cursor: default !important;
+    width: 100%;
+    display: inline-flex;
+}
+.list-heading span {
+    display: block;
+    cursor: pointer;
+    margin-left: auto;
+}
 .list-item {
     padding: 0.35rem 0;
 }
@@ -172,7 +182,18 @@ nav {
 .todo-lists {
     height: 100%;
     width: 100%;
-    padding: 2rem 2rem;
+    padding: 2rem 8rem;
+}
+
+@media (max-width: 1281px) {
+    .todo-lists {
+        padding: 2rem 2rem;
+    }
+}
+@media (max-width: 428px) {
+    .todo-lists {
+        padding: 2rem 0.8rem;
+    }
 }
 .todo-lists hr {
     margin-bottom: 1.4rem !important;
@@ -183,40 +204,141 @@ nav {
 .todo-list-header {
     display: flex;
 }
-.todo-list-header button {
+.todo-list-header #task-input {
     margin-left: auto;
+    font-size: xx-large;
+    cursor: pointer;
 }
+
 .todo-list-body ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
-
+.task-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
 .task-item {
     padding: 0.5rem 0;
     margin-bottom: 0.5rem;
     border-bottom: 1px solid #d3d3d3;
 }
 .task-item {
-    width: 100%;
+    cursor: pointer;
+}
+
+.task-options {
     display: flex;
+    margin-left: 0.5rem;
+}
+.task-options .delete-btn,
+.edit-btn {
+    margin-left: 1rem;
+    font-size: x-large;
 }
 
 .task-item .task-title {
     display: inline;
     margin-left: 10px;
 }
-.add-task {
+.task-item.hide {
     display: none;
 }
 
+.task-date {
+    display: block;
+    font-size: small;
+    margin-left: auto;
+}
+.form {
+    display: none;
+    flex-direction: column;
+    padding: 0.5rem;
+    border: 2px solid var(--color-secondary);
+    border-radius: 6px;
+}
+.form input[type="text"] {
+    margin-bottom: 0.5rem;
+    padding: 5px;
+    border: none;
+}
+.form input[type="date"] {
+    display: inline-block;
+}
+.form input:focus {
+    outline: none;
+}
 .active {
     display: flex;
 }
-
-.add-task input {
-    width: 90%;
+/* Buttons */
+.task-input-buttons {
+    display: flex;
 }
-.add-task #add-task {
+.task-input-buttons #priority {
+    margin-left: 0.5rem;
+}
+.task-input-buttons #add-task-btn,
+#edit-task-btn {
     margin-left: auto;
+}
+/* Task expand modal */
+.modal-overlay {
+    display: none;
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+.modal-overlay.active {
+    display: block;
+}
+.task-expand-modal {
+    height: 500px;
+    width: 500px;
+    background-color: white;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 2px 2px rgba(0, 0, 0, 0.06),
+        0 0 2px rgba(0, 0, 0, 0.07);
+    border-radius: 6px;
+}
+@media (max-width: 528px) {
+    .task-expand-modal {
+        height: 500px;
+        width: 428px;
+    }
+}
+@media (max-width: 428px) {
+    .task-expand-modal {
+        height: 500px;
+        width: 328px;
+    }
+}
+.task-expand-modal.expand {
+    transition: 270ms ease-in-out;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.modal-container {
+    /* display: flex; */
+    flex-direction: column;
+    padding: 2rem 2rem;
+}
+.modal-heading {
+    display: flex;
+    justify-content: space-between;
+}
+.close-btn {
+    cursor: pointer;
+    font-size: x-large;
+}
+.modal-body .description {
+    margin-bottom: 0.7rem;
 }

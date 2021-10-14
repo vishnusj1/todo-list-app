@@ -7,19 +7,36 @@ const Controller = (() => {
         const projectAddBtn = document.querySelector("#add-btn");
         projectAddBtn.addEventListener("click", addProject);
 
-        const taskInput = document.querySelector("#task-input");
-        taskInput.addEventListener("click", toggleTaskInput);
+        const form = document.querySelector(".add-task");
 
-        const addTaskBtn = document.querySelector("#add-task");
+        const taskInput = document.querySelector("#task-input");
+        taskInput.addEventListener("click", function (e) {
+            toggleTaskInput(form);
+        });
+
+        const addTaskBtn = document.querySelector("#add-task-btn");
         addTaskBtn.addEventListener("click", addTask);
 
-        loadDefault();
+        loadInbox();
         initProjectButtons();
     });
 
-    function loadDefault() {
-        const project = TodoList.getDefault();
-        populateProjectList(project);
+    function loadInbox() {
+        const project = TodoList.getInbox();
+        const task1 = todo(
+            "A Task",
+            "12-12-2000",
+            "This is task description",
+            2
+        );
+        const task2 = todo(
+            "Another Task",
+            "12-12-2000",
+            "This is task description",
+            1
+        );
+        TodoList.addTask(project, task1);
+        TodoList.addTask(project, task2);
         loadProject(project);
     }
 
@@ -35,10 +52,18 @@ const Controller = (() => {
         tasks.forEach((task) => {
             populateTaskList(task);
         });
+        handleTask();
     }
 
     function initProjectButtons() {
+        const defaultProjects = document.querySelector(".default-projects");
         const userProjects = document.querySelector(".custom-projects");
+
+        defaultProjects.addEventListener("click", (e) => {
+            if (e.target.classList.contains("default-project")) {
+                openProject(e);
+            }
+        });
         userProjects.addEventListener("click", (e) => {
             if (e.target.classList.contains("user-project")) {
                 openProject(e);
@@ -71,58 +96,198 @@ const Controller = (() => {
         input.value = "";
     }
 
-    function populateProjectList(project) {
-        const list = document.querySelector(".custom-projects");
-        const listItem = document.createElement("li");
-        const projectName = project.getName();
-        listItem.setAttribute("id", `project-${projectName.toLowerCase()}`);
-        listItem.classList.add("list-item", "user-project");
-        listItem.textContent = projectName;
-        list.appendChild(listItem);
-    }
-
-    function toggleTaskInput() {
-        const inputDiv = document.querySelector(".add-task");
-        if (inputDiv.classList.contains("active")) {
-            inputDiv.classList.remove("active");
-        } else {
-            inputDiv.classList.add("active");
-        }
-    }
-
-    function addTask() {
-        const input = document.querySelector("#task-name");
-        const taskName = input.value;
-        const task = todo(taskName);
+    function getProject() {
         const projectName = document.querySelector(
             ".todo-list-header > h2"
         ).textContent;
         const project = TodoList.getProject(projectName);
-
-        if (!taskName) {
-            return;
-        }
-        toggleTaskInput();
-        input.value = "";
-        TodoList.addTask(project, task);
-        loadTasks(project);
+        return project;
     }
 
-    function populateTaskList(task) {
-        const list = document.querySelector(".task-list");
-        const item = document.createElement("li");
-        item.classList.add("task-item");
-        const html = `
-                    <input class="task-button" type="checkbox"></input>
-                    <p class="task-title">${task.getTitle()}</p>
-        `;
-        item.innerHTML = html;
-        list.appendChild(item);
+    function populateProjectList(project) {
+        const list = document.querySelector(".custom-projects");
+        const listItem = document.createElement("li");
+        const projectName = project.getName();
+        const form = document.querySelector(".list-form");
+        listItem.setAttribute("id", `project-${projectName.toLowerCase()}`);
+        listItem.classList.add("list-item", "user-project");
+        listItem.textContent = projectName;
+        list.insertBefore(listItem, form);
+    }
+
+    function toggleTaskInput(form) {
+        if (form.classList.contains("active")) {
+            form.classList.remove("active");
+        } else {
+            form.classList.add("active");
+        }
+    }
+
+    function addTask() {
+        const form = document.querySelector(".add-task");
+        const titleInput = document.querySelector("#task-name");
+        const descInput = document.querySelector("#task-desc");
+        const date = document.querySelector("#due-date");
+        const priorityInput = document.querySelector("#priority");
+
+        const title = titleInput.value;
+        const description = descInput.value;
+        const dueDate = date.value;
+        const priotiy = priorityInput.value;
+
+        const task = todo(title, dueDate, description, priotiy);
+        const project = getProject();
+
+        if (!title) {
+            alert("Enter a title");
+            return;
+        }
+
+        toggleTaskInput(form);
+        titleInput.value = "";
+        descInput.value = "";
+        priorityInput.value = "";
+        date.value = "";
+        TodoList.addTask(project, task);
+        loadTasks(project);
     }
 
     function clearList() {
         const list = document.querySelector(".task-list");
         list.innerHTML = "";
+    }
+
+    function populateTaskList(task) {
+        const list = document.querySelector(".task-list");
+        const item = document.createElement("li");
+        item.classList.add(`task-item`);
+        const html = `
+                        <input class="task-button" type="checkbox">
+                            <p class="task-title">${task.getTitle()}</p>
+                            <p class="task-date">${task.getDate()}</p>
+                            <div class="task-options">
+                                <div class="edit-btn">&#x270E;</div>
+                                <div class="delete-btn">&times;</div>
+                            </div>
+                    `;
+        item.innerHTML = html;
+        list.appendChild(item);
+    }
+
+    function handleTask() {
+        const list = document.querySelectorAll(".task-item");
+        list.forEach((item) => {
+            item.addEventListener("click", (e) => {
+                if (e.target.classList.contains("edit-btn")) {
+                    handleEditTask(item);
+                } else if (e.target.classList.contains("delete-btn")) {
+                    deleteTask(item);
+                } else {
+                    expandTaskModal(e, item);
+                }
+            });
+        });
+    }
+
+    function getTask(item) {
+        const taskTitle = item.querySelector(".task-title").textContent;
+        const project = getProject();
+        const task = project.getTask(taskTitle);
+        return task;
+    }
+
+    function handleEditTask(item) {
+        const list = document.querySelector(".task-list");
+        const form = document.querySelector(".edit-task");
+        const saveBtn = form.querySelector(".edit-task-btn");
+        const title = form.querySelector("#name");
+        const desc = form.querySelector("#desc");
+        const date = form.querySelector("#due");
+        const priority = form.querySelector("#pri");
+        const task = getTask(item);
+
+        title.value = task.getTitle();
+        desc.value = task.getDesc();
+        date.value = task.getDate();
+        priority.value = task.getPriority();
+
+        list.insertBefore(form, item);
+        list.removeChild(item);
+        toggleTaskInput(form);
+        saveBtn.addEventListener("click", function (e) {
+            updateTask(item);
+        });
+    }
+
+    function updateTask(item) {
+        const container = document.querySelector(".todo-list-body");
+        const form = document.querySelector(".edit-task");
+        const title = form.querySelector("#name");
+        const description = form.querySelector("#desc");
+        const date = form.querySelector("#due");
+        const priority = form.querySelector("#pri");
+        const project = getProject();
+        const task = getTask(item);
+        task.setTitle(title.value);
+        task.setDate(date.value);
+        task.setDesc(desc.value);
+        task.setPriority(priority.value);
+
+        toggleTaskInput(form);
+        container.appendChild(form);
+        loadProject(project);
+    }
+
+    function deleteTask(item) {
+        const taskTitle = item.querySelector(".task-title").textContent;
+        const project = getProject();
+        const task = project.getTask(taskTitle);
+        TodoList.removeTask(project, task);
+        loadTasks(project);
+    }
+
+    function expandTaskModal(e, item) {
+        const modalTask = document.querySelector(".task-expand-modal");
+        const modalOverlay = document.querySelector(".modal-overlay");
+        populateTaskModal(modalTask, item);
+        if (
+            e.target.classList.contains("task-item") ||
+            e.target.classList.contains("task-title")
+        ) {
+            modalOverlay.classList.add("active");
+            modalTask.classList.add("expand");
+        }
+        const closeTaskModal = document.querySelector(".close-btn");
+        closeTaskModal.addEventListener("click", function (e) {
+            collapseTaskModal(modalOverlay, modalTask);
+        });
+    }
+
+    function populateTaskModal(modalTask, item) {
+        const task = getTask(item);
+        const html = `
+                        <div class="modal-container">
+                            <div class="modal-heading">
+                                <div class="title" id="modal-title"><h3>${task.getTitle()}</h3></div>
+                                <div class="close-btn">&times;</div>
+                            </div>
+                            <div class="modal-body">
+                                <div class="description">${
+                                    task.getDesc() === undefined
+                                        ? ""
+                                        : task.getDesc()
+                                }</div>
+                                <div class="task-date">${task.getDate()}</div>
+                            </div>
+                        </div>
+                    `;
+        modalTask.innerHTML = html;
+        return modalTask;
+    }
+
+    function collapseTaskModal(modalOverlay, modalTask) {
+        modalOverlay.classList.remove("active");
+        modalTask.classList.remove("expand");
     }
 })();
 

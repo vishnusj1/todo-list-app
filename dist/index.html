@@ -10,45 +10,65 @@
     <body>
         <div class="container" id="container">
             <header>
-                <div class="header-global-container">Todo</div>
+                <div class="header-global-container"></div>
             </header>
             <main>
                 <div class="content" id="content">
                     <nav class="side-nav">
                         <div class="nav-wrapper">
                             <ul class="projects default-projects" id="default-projects">
-                                <li class="list-item" id="project-inbox">Inbox</li>
-                                <li class="list-item" id="project-today">Today</li>
-                                <li class="list-item" id="project-week">Upcoming</li>
+                                <li class="list-item default-project" id="project-inbox">Inbox</li>
+                                <li class="list-item default-project" id="project-today">Today</li>
+                                <li class="list-item default-project" id="project-week">Upcoming</li>
                             </ul>
                             <ul class="projects custom-projects" id="custom-projects">
-                                <li class="list-item"><h4>Projects</h4></li>
-                            </ul>
-                            <ul class="projects add-form">
-                                <li class="list-item"><button id="add-btn">Add Project</button></li>
-                                <li class="list-item "><input type="text" id="project-name" name="project-name" placeholder="Project Name"></li>
+                                <li class="list-heading"><h4>Projects</h4><span id="add-btn"><img src="/src/img/add.png" alt="&plus;"></span></li>
+                                <li class="list-form"><input type="text" id="project-name" name="project-name" placeholder="Project Name"></li>
                             </ul>
                         </div>
                     </nav>
                     <section class="todo-lists">
                         <div class="todo-list-container">
                             <div class="todo-list-header">
-                                <h2>Inbox</h2>
-                                <button id="task-input">Add Task</button>
+                                <h2></h2>
+                                <div id="task-input">&plus;</div>
                             </div>
                             <hr>
                             <div class="todo-list-body">
                                 <ul class="task-list">
-                                    <!-- <li class="task-item">
-                                        <input class="task-button" type="checkbox">
-                                        </input>
-                                        <p class="task-title">This is the task title</p>
-                                    </li> -->
+                                    <li class="task-item">
                                 </ul>
-                             <div class="add-task">
-                                <input type="text" id="task-name">
-                                <button id="add-task">Add</button>
+                                <div class="form add-task">
+                                    <input type="text" id="task-name" name="title" placeholder="Title">
+                                    <input type="text" id="task-desc" placeholder="Description...">
+                                    <div class="task-input-buttons">
+                                        <input id="due-date" type="date">
+                                        <select id="priority" name="priority">
+                                            <option value="4">None</option>
+                                            <option value="3">Low</option>
+                                            <option value="2">Medium</option>
+                                            <option value="1">High</option>
+                                        </select>
+                                        <button id="add-task-btn">Add</button>
+                                    </div>
+                                </div>
+                                <div class="form edit-task">
+                                    <input type="text" id="name" name="title" placeholder="Title">
+                                    <input type="text" id="desc" placeholder="Description...">
+                                    <div class="task-input-buttons">
+                                        <input id="due" type="date">
+                                        <select id="pri" name="priority">
+                                            <option value="4">None</option>
+                                            <option value="3">Low</option>
+                                            <option value="2">Medium</option>
+                                            <option value="1">High</option>
+                                        </select>
+                                        <button class="edit-task-btn" id="edit-task-btn">Save</button>
+                                    </div>
+                                </div>
                             </div>
+                            <div class="modal-overlay"></div>
+                            <div class="task-expand-modal">
                             </div>
                         </div>
                     </section>

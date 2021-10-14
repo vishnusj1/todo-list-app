@@ -1,6 +1,9 @@
 const Projects = (name) => {
     const _name = name;
-    const _tasks = [];
+    let _tasks = [];
+
+    const getIndex = (name) =>
+        _tasks.findIndex((task) => task.getTitle() === name);
 
     const getName = () => _name;
 
@@ -16,12 +19,20 @@ const Projects = (name) => {
         _tasks.push(task);
     };
 
+    const removeTask = (task) => {
+        return (_tasks = _tasks.filter(
+            (todo) => todo.getTitle() !== task.getTitle()
+        ));
+    };
+
     return {
+        getIndex,
         getName,
         setName,
         getTasks,
         getTask,
         addTask,
+        removeTask,
     };
 };
 export default Projects;

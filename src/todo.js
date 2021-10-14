@@ -1,13 +1,25 @@
-const todo = (title, description, dueDate, priotiy) => {
+const todo = (title, dueDate, description, prioritiy) => {
     const getTitle = () => title;
+    const setTitle = (value) => (title = value);
+
     const getDesc = () => description;
-    const getDue = () => dueDate;
-    const getPriority = () => priotiy;
+    const setDesc = (value) => (description = value);
+
+    const getDate = () => dueDate;
+    const setDate = (value) => (dueDate = value);
+
+    const getPriority = () => prioritiy;
+    const setPriority = (value) => (prioritiy = value);
+
     return {
         getTitle,
+        setTitle,
         getDesc,
-        getDue,
+        setDesc,
+        getDate,
+        setDate,
         getPriority,
+        setPriority,
     };
 };
 

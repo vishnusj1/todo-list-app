@@ -4,9 +4,17 @@ import Controller from "./controller";
 const TodoList = (() => {
     let projects = [];
 
+    projects.push(Projects("Inbox"));
+    projects.push(Projects("Today"));
+    projects.push(Projects("Upcoming"));
     projects.push(Projects("Default"));
 
+    const _inbox = getProject("Inbox");
     const _defaultProject = getProject("Default");
+
+    function getInbox() {
+        return _inbox;
+    }
 
     function getDefault() {
         return _defaultProject;
@@ -28,12 +36,18 @@ const TodoList = (() => {
         project.addTask(task);
     }
 
+    function removeTask(project, task) {
+        project.removeTask(task);
+    }
+
     return {
+        getInbox,
         getDefault,
         getProjects,
         getProject,
         addProject,
         addTask,
+        removeTask,
     };
 })();
 
