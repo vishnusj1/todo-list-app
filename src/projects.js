@@ -2,8 +2,9 @@ const Projects = (name) => {
     const _name = name;
     let _tasks = [];
 
-    const getIndex = (name) =>
-        _tasks.findIndex((task) => task.getTitle() === name);
+    const getIndex = (name) => {
+        return _tasks.findIndex((task) => task.getTitle() === name);
+    };
 
     const getName = () => _name;
 

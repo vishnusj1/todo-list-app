@@ -158,7 +158,7 @@ const Controller = (() => {
     }
 
     function populateTaskList(task) {
-        const list = document.querySelector(".task-list");
+        const taskList = document.querySelector(".task-list");
         const item = document.createElement("li");
         item.classList.add(`task-item`);
         const html = `
@@ -171,7 +171,19 @@ const Controller = (() => {
                             </div>
                     `;
         item.innerHTML = html;
-        list.appendChild(item);
+        handleCheck(task, item);
+        taskList.appendChild(item);
+    }
+
+    function handleCheck(task, item) {
+        const checkbox = item.querySelector("input[type=checkbox]");
+        if (task.getStatus() === true) {
+            checkbox.checked = true;
+            item.classList.add("checked");
+        } else {
+            checkbox.checkbox = false;
+            item.classList.remove("checked");
+        }
     }
 
     function handleTask() {
@@ -182,6 +194,8 @@ const Controller = (() => {
                     handleEditTask(item);
                 } else if (e.target.classList.contains("delete-btn")) {
                     deleteTask(item);
+                } else if (e.target.classList.contains("task-button")) {
+                    updateStatus(item);
                 } else {
                     expandTaskModal(e, item);
                 }
@@ -194,6 +208,13 @@ const Controller = (() => {
         const project = getProject();
         const task = project.getTask(taskTitle);
         return task;
+    }
+
+    function updateStatus(item) {
+        const task = getTask(item);
+        const project = getProject();
+        task.updateStatus();
+        loadTasks(project);
     }
 
     function handleEditTask(item) {
@@ -230,7 +251,7 @@ const Controller = (() => {
         const task = getTask(item);
         task.setTitle(title.value);
         task.setDate(date.value);
-        task.setDesc(desc.value);
+        task.setDesc(description.value);
         task.setPriority(priority.value);
 
         toggleTaskInput(form);
